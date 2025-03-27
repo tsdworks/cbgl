@@ -7,7 +7,7 @@
     <span> · </span>
     <a href="#run">run</a>
     <span> · </span>
-    <a href="#inputoutput-at-a-glance">I/O at a glance</a>
+    <a href="#inputoutput-at-a-glance">I/O</a>
     <span> · </span>
     <a href="#motivation">motivation</a>
 </h3>
