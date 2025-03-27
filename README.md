@@ -105,12 +105,12 @@ docker exec -it cbgl_container sh -c "source ~/catkin_ws/devel/setup.bash; rosse
 
 ## Input/output at a glance
 
-| i/o | What                                                                  |                                                        |
-| --- | --------------------------------------------------------------------- | ------------------------------------------------------ |
-| in  | A `sensor_msgs/LaserScan` message published through                   | topic `configuration_files/scan_topic`                 |
-| in  | A `nav_msgs/OccupancyGrid` message published through                  | topic `configuration_files/map_topic`                  |
-| out | A `geometry_msgs/PoseWithCovarianceStamped` message published through | topic `configuration_files/output_pose_topic`          |
-| out | The transform between the `odom` frame and the `map` frame            | if `configuration_files/tf_broadcast` is set to `true` |
+| i/o | What                                                                                                                |
+| --- | ------------------------------------------------------------------------------------------------------------------- |
+| in  | A `sensor_msgs/LaserScan` message published through topic `configuration_files/scan_topic`                          |
+| in  | A `nav_msgs/OccupancyGrid` message published through topic `configuration_files/map_topic`                          |
+| out | A `geometry_msgs/PoseWithCovarianceStamped` message published through topic `configuration_files/output_pose_topic` |
+| out | The transform between the `odom` frame and the `map` frame if `configuration_files/tf_broadcast` is set to `true`   |
 
 ## Motivation
 
