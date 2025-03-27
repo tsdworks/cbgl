@@ -2,6 +2,16 @@
 
 [![ieeexplore.ieee.org](https://img.shields.io/badge/IEEE/RSJ_IROS_2024_paper-00629B)](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10802235) [![youtube.com](https://img.shields.io/badge/2'_presentation-YouTube-FF0000)](https://www.youtube.com/watch?v=xaDKjI0WkDc) [![youtube.com](https://img.shields.io/badge/In_depth-YouTube-FF0000)](https://www.youtube.com/watch?v=TvTNEDGp-NU)
 
+<h3 align="center">
+    <a href="#pre-installation">install</a>
+    <span> · </span>
+    <a href="#run">run</a>
+    <span> · </span>
+    <a href="#inputoutput-at-a-glance">I/O at a glance</a>
+    <span> · </span>
+    <a href="#motivation">motivation</a>
+</h3>
+
 `cbgl` is a ROS package written in C++ that allows you to localise your 2D LIDAR sensor in a given 2D occupancy grid map under global uncertainty in position and orientation, in minimal time
 
 - You can expect the execution time to roughly have an order of magnitude of $`10e \cdot \text{area} \cdot N_s`$ microseconds, where $\text{area}$ is the area of the map's free space and $`N_s`$ is the LIDAR's number of rays. (Strictly speaking the execution time varies according to the geometry of the environment and other factors.) In the video below the environment area is $`2000`$ m$`^2`$ and localisation is performed in under four seconds
@@ -95,10 +105,12 @@ docker exec -it cbgl_container sh -c "source ~/catkin_ws/devel/setup.bash; rosse
 
 ## Input/output at a glance
 
-- [in]  A `sensor_msgs/LaserScan` message published through topic `configuration_files/scan_topic`
-- [in]  A `nav_msgs/OccupancyGrid` message published through topic `configuration_files/map_topic`
-- [out] A `geometry_msgs/PoseWithCovarianceStamped` message published through topic `configuration_files/output_pose_topic`
-- [out] The transform between the `odom` frame and the `map` frame if `configuration_files/tf_broadcast` is set to `true`
+| i/o | What                                                                  |                                                        |
+| --- | --------------------------------------------------------------------- | ------------------------------------------------------ |
+| in  | A `sensor_msgs/LaserScan` message published through                   | topic `configuration_files/scan_topic`                 |
+| in  | A `nav_msgs/OccupancyGrid` message published through                  | topic `configuration_files/map_topic`                  |
+| out | A `geometry_msgs/PoseWithCovarianceStamped` message published through | topic `configuration_files/output_pose_topic`          |
+| out | The transform between the `odom` frame and the `map` frame            | if `configuration_files/tf_broadcast` is set to `true` |
 
 ## Motivation
 
