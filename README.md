@@ -7,11 +7,11 @@
 </div>
 
 <h3 align="center">
+    <a href="#inputoutput-at-a-glance">I/O</a>
+    <span> · </span>
     <a href="#pre-installation">install</a>
     <span> · </span>
     <a href="#run">run</a>
-    <span> · </span>
-    <a href="#inputoutput-at-a-glance">I/O</a>
 </h3>
 
 `cbgl` is a ROS package written in C++ that allows you to localise your 2D LIDAR sensor in a given 2D occupancy grid map under global uncertainty in position and orientation, in minimal time
