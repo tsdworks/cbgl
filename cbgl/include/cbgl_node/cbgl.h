@@ -99,6 +99,8 @@ class CBGL
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
 
+    ros::Time sampling_start_time_;
+
     // subscribers
     ros::Subscriber scan_subscriber_;
     ros::Subscriber map_subscriber_;

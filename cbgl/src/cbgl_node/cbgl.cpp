@@ -1612,6 +1612,7 @@ void CBGL::processPoseCloud()
   {
     geometry_msgs::PoseArray pa1;
     pa1.header.stamp = ros::Time::now();
+    pa1.header.frame_id = fixed_frame_id_;
     std::vector<geometry_msgs::Pose> pv1;
     for (unsigned int i = 0; i < dispersed_particles_.size(); i++)
       pv1.push_back(*dispersed_particles_[i]);
@@ -1621,8 +1622,14 @@ void CBGL::processPoseCloud()
 
   //----------------------------------------------------------------------------
   // Do not take ALL hypotheses, but only those with the 10 best caers
+  ros::Time prune_start_time = ros::Time::now();
+
   std::vector<geometry_msgs::Pose::Ptr> caer_best_particles =
     siftThroughCAERPanoramic(dispersed_particles_);
+  
+  ros::Time prune_end_time = ros::Time::now();
+  ros::Time sampling_end_time = ros::Time::now();
+  ros::Time best_hypotheses_matching_start_time = ros::Time::now();
 
   ROS_INFO("[CBGL] I will consider only %zu hypotheses",
     caer_best_particles.size());
@@ -1632,6 +1639,7 @@ void CBGL::processPoseCloud()
   {
     geometry_msgs::PoseArray pa2;
     pa2.header.stamp = ros::Time::now();
+    pa2.header.frame_id = fixed_frame_id_;
     std::vector<geometry_msgs::Pose> pv2;
     for (unsigned int i = 0; i < caer_best_particles.size(); i++)
       pv2.push_back(*caer_best_particles[i]);
@@ -1712,6 +1720,10 @@ void CBGL::processPoseCloud()
   }
   else
     ROS_ERROR("[CBGL] No valid pose found");
+  
+  ROS_INFO("\033[32m[CBGL] Sampling time: %lfs\033[0m", (sampling_end_time - sampling_start_time_).toSec());
+  ROS_INFO("\033[32m[CBGL] Pruning time: %lfs\033[0m", (prune_end_time - prune_start_time).toSec());
+  ROS_INFO("\033[32m[CBGL] Pure matching time: %lfs\033[0m", (ros::Time::now() - best_hypotheses_matching_start_time).toSec());
 
   // Publish execution time
   measureExecutionTime(start, ros::Time::now());
@@ -1724,9 +1736,9 @@ void CBGL::processPoseCloud()
   covar[6*0+0] = initial_cov_xx_;
   covar[6*1+1] = initial_cov_yy_;
   covar[6*5+5] = initial_cov_aa_;
-  global_pose_wcs.pose.covariance =  covar;
+  global_pose_wcs.pose.covariance = covar;
   global_pose_wcs.header.stamp = ros::Time::now();
-  global_pose_wcs.header.frame_id = "/map";
+  global_pose_wcs.header.frame_id = fixed_frame_id_;
   global_pose_publisher_.publish(global_pose_wcs);
 
   // Broadcast pose as transform
@@ -1970,9 +1982,13 @@ CBGL::scanMap(
     scan_method.compare("cddt")         == 0)
   {
     // Convert laser position to grid coordinates
-    float x = current_laser_pose.position.x / map_.info.resolution;
+    // float x = current_laser_pose.position.x / map_.info.resolution;
+    // float y = map_.info.height - 1 -
+    //   current_laser_pose.position.y / map_.info.resolution;
+    float x = (current_laser_pose.position.x - map_.info.origin.position.x) / map_.info.resolution;
     float y = map_.info.height - 1 -
-      current_laser_pose.position.y / map_.info.resolution;
+          (current_laser_pose.position.y - map_.info.origin.position.y) / map_.info.resolution;
+
     float a = extractYawFromPose(current_laser_pose);
 
     // How many rays?
@@ -2078,9 +2094,13 @@ CBGL::scanMapPanoramic(
     scan_method.compare("cddt")         == 0)
   {
     // Convert laser position to grid coordinates
-    float x = current_laser_pose.position.x / map_.info.resolution;
+    // float x = current_laser_pose.position.x / map_.info.resolution;
+    // float y = map_.info.height - 1 -
+    //   current_laser_pose.position.y / map_.info.resolution;
+    float x = (current_laser_pose.position.x - map_.info.origin.position.x) / map_.info.resolution;
     float y = map_.info.height - 1 -
-      current_laser_pose.position.y / map_.info.resolution;
+              (current_laser_pose.position.y - map_.info.origin.position.y) / map_.info.resolution;
+
     float a = extractYawFromPose(current_laser_pose);
 
     // How many rays?
@@ -2283,6 +2303,8 @@ CBGL::startSignalService(
     ROS_WARN("[CBGL] Map not received yet, returning ...");
     return false;
   }
+
+  sampling_start_time_ = ros::Time::now();
 
   ROS_INFO("--------------------------------------------------------------------------");
   ROS_INFO("[CBGL] Initializing with uniform distribution over map");
