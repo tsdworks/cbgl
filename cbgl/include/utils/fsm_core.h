@@ -34,6 +34,8 @@
 #include <CGAL/Min_ellipse_2.h>
 #include <CGAL/Min_ellipse_2_traits_2.h>
 #include <eigen3/Eigen/Geometry>
+#include <random>
+#undef m
 
 // --- TYPEDEFs ----------------------------------------------------------------
 typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;

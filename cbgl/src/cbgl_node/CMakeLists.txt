@@ -1,7 +1,7 @@
 add_library(cbgl_lib cbgl.cpp)
 
 # Range_libc required library
-set(BASEPATH "${CMAKE_SOURCE_DIR}")
+set(BASEPATH "${CMAKE_SOURCE_DIR}/cbgl/cbgl/")
 set(RANGELIB_DIR ${BASEPATH}/include/utils/range_libc)
 add_library(cbgl_lodepng_lib
   ${RANGELIB_DIR}/vendor/lodepng/lodepng.cpp)
