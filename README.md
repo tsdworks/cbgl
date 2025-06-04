@@ -1,6 +1,6 @@
 # Install and run natively
 
-This package was tested and works under Ubuntu 16.04 and ROS kinetic. You will need [`csm`](https://github.com/AndreaCensi/csm), `CGAL 4.7` and `fftw3` as dependencies. 
+This package was tested and works under Ubuntu 20.04 and ROS Noetic. You will need [`csm`](https://github.com/AndreaCensi/csm), `CGAL 4.7` and `fftw3` as dependencies. 
 
 ## Install 
 
