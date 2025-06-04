@@ -161,13 +161,6 @@ namespace ranges {
 			unsigned char* image;
 
 			error = lodepng_decode32_file(&image, &width, &height, filename.c_str());
-      OMap(image, threshold);
-		}
-
-		OMap(unsigned char* image) : OMap(image, 128) {}
-		OMap(unsigned char* image, float threshold) : has_error(false) {
-			unsigned error;
-
 			if(error) {
 				printf("ERROR %u: %s\n", error, lodepng_error_text(error));
 				has_error = true;
@@ -205,7 +198,41 @@ namespace ranges {
 					raw_grid[x][y] = gray;
 				}
 			}
-    }
+		}
+		OMap(unsigned char* image, int w, int h) : OMap(image, 128, w, h) {}
+		OMap(unsigned char* image, float threshold, int w, int h) : width(w), height(h), fn(""), has_error(false) {
+			for (int i = 0; i < width; ++i) {
+				std::vector<bool> y_axis;
+				for (int q = 0; q < height; ++q) y_axis.push_back(false);
+				grid.push_back(y_axis);
+			}
+
+			for (int i = 0; i < width; ++i) {
+				std::vector<float> y_axis;
+				for (int q = 0; q < height; ++q) y_axis.push_back(0);
+				raw_grid.push_back(y_axis);
+			}
+
+			#if _MAKE_TRACE_MAP == 1
+			for (int i = 0; i < width; ++i) {
+				std::vector<bool> y_axis;
+				for (int q = 0; q < height; ++q) y_axis.push_back(false);
+				trace_grid.push_back(y_axis);
+			}
+			#endif
+
+			for (int y = 0; y < height; ++y) {
+				for (int x = 0; x < width; ++x) {
+					unsigned idx = 4 * y * width + 4 * x;
+					int r = image[idx + 2];
+					int g = image[idx + 1];
+					int b = image[idx + 0];
+					int gray = (int) utils::rgb2gray(r,g,b);
+					if (gray < threshold) grid[x][y] = true;
+					raw_grid[x][y] = gray;
+				}
+			}
+		}
 
 		bool get(int x, int y) { return grid[x][y]; }
 		bool isOccupied(int x, int y) {

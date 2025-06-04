@@ -690,6 +690,7 @@ CBGL::getBaseToLaserTf(const std::string& frame_id)
   }
 
   base_to_laser_ = base_to_laser_tf;
+
   laser_to_base_ = base_to_laser_.inverse();
 
   return true;
@@ -1481,7 +1482,7 @@ CBGL::mapCallback(const nav_msgs::OccupancyGrid& map_msg)
   // Re-set the map png file
   unsigned char converted[4*map_msg.data.size()];
   convertMapToPNG(map_msg, converted);
-  omap_ = ranges::OMap(converted);
+  omap_ = ranges::OMap(converted, map_msg.info.width, map_msg.info.height);
 
   received_map_ = true;
   if (received_scan_ && received_pose_cloud_ && received_start_signal_)
@@ -2340,10 +2341,15 @@ CBGL::uniformPoseGenerator(void* arg)
 
   double min_x, max_x, min_y, max_y;
 
-  min_x = (map->size_x * map->scale)/2.0 - map->origin_x;
-  max_x = (map->size_x * map->scale)/2.0 + map->origin_x;
-  min_y = (map->size_y * map->scale)/2.0 - map->origin_y;
-  max_y = (map->size_y * map->scale)/2.0 + map->origin_y;
+  // min_x = (map->size_x * map->scale)/2.0 - map->origin_x;
+  // max_x = (map->size_x * map->scale)/2.0 + map->origin_x;
+  // min_y = (map->size_y * map->scale)/2.0 - map->origin_y;
+  // max_y = (map->size_y * map->scale)/2.0 + map->origin_y;
+  min_x = - (map->size_x * map->scale) / 2.0 + map->origin_x;
+  max_x = + (map->size_x * map->scale) / 2.0 + map->origin_x;
+  min_y = - (map->size_y * map->scale) / 2.0 + map->origin_y;
+  max_y = + (map->size_y * map->scale) / 2.0 + map->origin_y;
+
 
   pf_vector_t p;
 
