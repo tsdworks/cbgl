@@ -2178,7 +2178,7 @@ CBGL::siftThroughCAERPanoramic(
 {
   // CAER time
   double caer_processing_time = 0;
-  ros::Time current_start_time = ros::Time::now();
+  auto current_start_time = ros::WallTime::now();
 
   // All da_*init_hypotheses.size() hypotheses
   std::vector<geometry_msgs::Pose::Ptr> all_hypotheses;
@@ -2231,13 +2231,13 @@ CBGL::siftThroughCAERPanoramic(
 
 
       // Compute CAER
-      current_start_time = ros::Time::now();
+      current_start_time = ros::WallTime::now();
       double c = caer(latest_world_scan_->ranges, r_ikf);
       if (c > 0.0)
         caers.push_back(c);
       else // THIS IS NECESSARY
         caers.push_back(std::numeric_limits<double>::max());
-      caer_processing_time += (ros::Time::now() - current_start_time).toSec();
+      caer_processing_time += (ros::WallTime::now() - current_start_time).toSec();
 
       //printf("%f\n", caers.back());
     }
