@@ -1865,8 +1865,8 @@ CBGL::retypeScan(const sensor_msgs::LaserScan::Ptr& scan_msg)
 CBGL::scanCallback(
   const sensor_msgs::LaserScan::Ptr& scan_msg)
 {
-  if (!std::isfinite(scan_msg->ranges[0])) // premature scan
-    return;
+  // if (!std::isfinite(scan_msg->ranges[0])) // premature scan
+  //   return;
 
   // Undersample range scan if desirable ---------------------------------------
   sensor_msgs::LaserScan::Ptr s_ =
